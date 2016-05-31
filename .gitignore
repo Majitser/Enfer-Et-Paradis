@@ -1,0 +1,44 @@
+# =============== #
+# Unity generated #
+# =============== #
+[Tt]emp/
+[Oo]bj/
+IOS_Build/
+[Bb]uild
+/Papoti/[Ll]ibrary/
+/Papoti/[Ll]ocalCache//Papoti/Assets/Jemast/
+sysinfo.txt
+*.lastScene
+
+# =============== #
+# Build #
+# =============== #
+[tT]est_WebGL/
+[tT]est_Data/
+*.apk
+*.obb
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+[Ee]xported[Oo]bj/
+UnityVS/
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln*
+*.user
+*.unityproj
+*.booproj
+*.lastScene
+ 
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store*
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
