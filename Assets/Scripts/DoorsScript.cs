@@ -3,20 +3,25 @@ using System.Collections;
 
 public class DoorsScript : MonoBehaviour {
 
-	public GameManager gameManager;
+	public RectTransform cooldownBarBg;
+	public RectTransform cooldownBar;
 
-	public float maxTimeOpen = 4;
-	public float minTimeOpen = 2;
-	public float maxTimeClose = 2;
-	public float minTimeClose = 0.5f;
+	public float maxTimeOpen = 8;
+	public float minTimeOpen = 5;
+	public float maxTimeClose = 3;
+	public float minTimeClose = 2;
 	public bool isOpen = true;
 
 	private float openTime;
 	private float closeTime;
+	private float startCooldownDoor;
 
 	// Use this for initialization
 	void Start () {
 		openTime = Random.Range (minTimeOpen, maxTimeOpen);
+		startCooldownDoor = openTime;
+		cooldownBar.offsetMin = Vector2.zero;
+		this.transform.GetChild (0).gameObject.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -24,7 +29,7 @@ public class DoorsScript : MonoBehaviour {
 		if (openTime > 0 && isOpen) 
 		{
 			openTime -= Time.deltaTime;
-			gameManager.cooldownBar.offsetMin -= new Vector2 ((gameManager.cooldownBarBg.rect.width / gameManager.startCooldownDoor) * Time.deltaTime, 0);
+			cooldownBar.offsetMin += new Vector2 ((cooldownBarBg.rect.width / startCooldownDoor) * Time.deltaTime, 0);
 		}
 
 		if (closeTime > 0 && !isOpen)
@@ -35,13 +40,17 @@ public class DoorsScript : MonoBehaviour {
 			this.transform.GetChild (0).gameObject.SetActive (true);
 			isOpen = false;
 			closeTime = Random.Range (minTimeClose, maxTimeClose);
+			cooldownBarBg.gameObject.SetActive (false);
 		}
 
 		if (closeTime <= 0 && !isOpen) 
 		{
 			this.transform.GetChild (0).gameObject.SetActive (false);
 			isOpen = true;
-			openTime = Random.Range (minTimeClose, maxTimeClose);
+			openTime = Random.Range (minTimeOpen, maxTimeOpen);
+			startCooldownDoor = openTime;
+			cooldownBarBg.gameObject.SetActive (true);
+			cooldownBar.offsetMin = Vector2.zero;
 		}
 	}
 }

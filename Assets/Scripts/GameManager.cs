@@ -24,17 +24,6 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		for (int i = 0; i < doors.Length; i++) 
-		{
-			if (i == currentNb)
-				doors [i].transform.GetChild (0).gameObject.SetActive (false);
-			else
-				doors [i].transform.GetChild (0).gameObject.SetActive (true);
-		}
-		cooldownBar.offsetMin = new Vector2 (cooldownBarBg.rect.width, 0);
-		RectTransform doorRect = (RectTransform)doors [currentNb].transform;
-		cooldownBarBg.anchoredPosition = new Vector2 (doorRect.anchoredPosition.x, cooldownBarBg.anchoredPosition.y);
-		startCooldownDoor = cooldownDoors;
 	}
 	
 	// Update is called once per frame
@@ -47,6 +36,8 @@ public class GameManager : MonoBehaviour {
 			nbSpawn = Mathf.Floor (1 + scoreManager.score /5);
 			if (nbSpawn > 4)
 				nbSpawn = 4;
+
+			Debug.Log (nbSpawn);
 			for (int i = 0; i < nbSpawn; i++)
 			{
 				int randType = Random.Range (0, doors.Length);
@@ -93,37 +84,6 @@ public class GameManager : MonoBehaviour {
 			}
 			cooldownSpawn = 2;
 		}
-
-		if (cooldownDoors > 0)
-		{
-			cooldownDoors -= Time.deltaTime;
-
-		}
-
-		if (cooldownDoors <= 0) 
-		{
-			int newNb = Random.Range(0, doors.Length);
-			if (newNb != currentNb)
-				warningDoorChanging (newNb);
-		}
-	}
-
-	void warningDoorChanging(int newNb)
-	{
-		for (int i = 0; i < doors.Length; i++) 
-		{
-			if (i == newNb)
-				doors [i].transform.GetChild (0).gameObject.SetActive (false);
-			else
-				doors [i].transform.GetChild (0).gameObject.SetActive (true);
-		}
-
-		currentNb = newNb;
-		cooldownDoors = Random.Range(3, 5);
-		cooldownBar.offsetMin = new Vector2 (cooldownBarBg.rect.width, 0);
-		RectTransform doorRect = (RectTransform)doors [currentNb].transform;
-		cooldownBarBg.anchoredPosition = new Vector2 (doorRect.anchoredPosition.x, cooldownBarBg.anchoredPosition.y);
-		startCooldownDoor = cooldownDoors;
 	}
 
 	public void Spawn(int aleaType, Transform parent)
@@ -133,25 +93,23 @@ public class GameManager : MonoBehaviour {
 		mob.transform.localScale = Vector3.one;
 		mob.GetComponent<MobProperty> ().type = aleaType;
 		mob.GetComponent<Button> ().onClick.AddListener (delegate {
-			StartCoroutine (TouchAction (aleaType, mob));	
+			StartCoroutine (TouchAction (aleaType, mob.transform.GetChild(0)));	
 		});
 
 		RectTransform mobRect = (RectTransform)mob.transform;
 	}
 
-	IEnumerator TouchAction(int type, GameObject mob)
+	IEnumerator TouchAction(int type, Transform mob)
 	{
-		if (type == currentNb) 
+		if (doors[type].GetComponent<DoorsScript>().isOpen) 
 		{
-			mob.GetComponent<MobProperty> ().isMoving = true;
-			iTween.MoveTo (mob, iTween.Hash ("x", doors [type].transform.position.x, "y", doors [type].transform.position.y, "time", 0.3, "easeType", iTween.EaseType.easeOutCubic));
+			mob.parent.GetComponent<MobProperty> ().isMoving = true;
+			iTween.MoveTo (mob.gameObject, iTween.Hash ("x", doors [type].transform.position.x, "y", doors [type].transform.position.y, "time", 0.3, "easeType", iTween.EaseType.easeOutCubic));
 
 			yield return new WaitForSeconds (0.3f);
 
-			MenuManager.instance.FadeIn (mob);
+			MenuManager.instance.FadeIn (mob.gameObject);
 			scoreManager.addScore (1);
-			yield return new WaitForSeconds (0.35f);
-			mob.GetComponent<MobProperty> ().isMoving = false;
 		} 
 		else 
 		{

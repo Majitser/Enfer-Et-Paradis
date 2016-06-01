@@ -46,5 +46,7 @@ public class MenuManager : MonoBehaviour {
 
 			yield return true;
 		}
+
+		go.SetActive (false);
 	}
 }
