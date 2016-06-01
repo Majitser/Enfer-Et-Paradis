@@ -45,11 +45,17 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\FX Quest\Scripts\EQ_CloudFlow.cs" />
+     <Compile Include="Assets\FX Quest\Scripts\EQ_OrbitCamera.cs" />
+     <Compile Include="Assets\FX Quest\Scripts\EQ_ParticleMoveSample.cs" />
+     <Compile Include="Assets\FX Quest\Scripts\EQ_TestParticles.cs" />
+     <Compile Include="Assets\Scripts\DestroyGo.cs" />
      <Compile Include="Assets\Scripts\DoorsScript.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\MenuManager.cs" />
      <Compile Include="Assets\Scripts\MobProperty.cs" />
      <Compile Include="Assets\Scripts\ScoreManager.cs" />
+     <None Include="Assets\FX Quest\!Readme.txt" />
      <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

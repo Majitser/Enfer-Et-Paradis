@@ -6,10 +6,18 @@ public class GameManager : MonoBehaviour {
 
 	public ScoreManager scoreManager;
 
+	[Header("World")]
 	public GameObject GameCanvas;
+	public GameObject maskWorld;
+	public float shakeTime = 0.5f;
+	public float shakeAmount = 0.7f;
+	[Header("Mob")]
 	public RectTransform spawnPoint;
 	public Transform[] mobGrids;
 	public GameObject mobPrefab;
+	public GameObject[] explosionParticle;
+	public GameObject clickParticle;
+	[Header("Door")]
 	public GameObject[] doors;
 	public RectTransform cooldownBarBg;
 	public RectTransform cooldownBar;
@@ -82,13 +90,14 @@ public class GameManager : MonoBehaviour {
 				else
 					mobGrids [i].gameObject.SetActive (false);
 			}
-			cooldownSpawn = 2;
+			cooldownSpawn = 2.7f;
 		}
 	}
 
 	public void Spawn(int aleaType, Transform parent)
 	{
 		GameObject mob = Instantiate (mobPrefab) as GameObject;
+		//mob.GetComponent<MobProperty> ().timerDeath = 1.5f;
 		mob.transform.SetParent (parent);
 		mob.transform.localScale = Vector3.one;
 		mob.GetComponent<MobProperty> ().type = aleaType;
@@ -104,16 +113,28 @@ public class GameManager : MonoBehaviour {
 		if (doors[type].GetComponent<DoorsScript>().isOpen) 
 		{
 			mob.parent.GetComponent<MobProperty> ().isMoving = true;
-			iTween.MoveTo (mob.gameObject, iTween.Hash ("x", doors [type].transform.position.x, "y", doors [type].transform.position.y, "time", 0.3, "easeType", iTween.EaseType.easeOutCubic));
+			GameObject click = Instantiate (clickParticle) as GameObject;
+			click.transform.position = mob.parent.position;
+			mob.GetChild (0).GetComponent<ParticleSystem> ().Play ();
+			iTween.MoveTo (mob.gameObject, iTween.Hash ("x", doors [type].transform.position.x, "y", doors [type].transform.position.y, "time", 0.6, "easeType", iTween.EaseType.easeOutCubic));
 
-			yield return new WaitForSeconds (0.3f);
+			yield return new WaitForSeconds (0.6f);
 
 			MenuManager.instance.FadeIn (mob.gameObject);
+			mob.GetChild(0).GetComponent<ParticleSystem> ().Stop();
 			scoreManager.addScore (1);
+			GameObject explosion = Instantiate (explosionParticle [type]) as GameObject;
+			explosion.transform.SetParent(maskWorld.transform.parent);
+			explosion.transform.position = mob.position;
 		} 
 		else 
 		{
-			Debug.Log ("fail !");
+			ScreenShaker ();
 		}
+	}
+
+	void ScreenShaker()
+	{
+		maskWorld.GetComponent<Animation> ().Play ();
 	}
 }
