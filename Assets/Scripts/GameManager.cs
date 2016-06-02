@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour {
 
 	public float cooldownSpawn = 0.5f;
 	public float cooldownDoors = 1f;
+	public float cooldownFail = 0f;
 
 	private int currentNb = 0;
 	private float nbSpawn = 1;
@@ -43,6 +44,9 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		if (StatesManager.GameStates == StatesManager.states.GAME) 
 		{
+			if (cooldownFail > 0)
+				cooldownFail -= Time.deltaTime;
+
 			if (cooldownSpawn > 0)
 				cooldownSpawn -= Time.deltaTime;
 
@@ -178,9 +182,15 @@ public class GameManager : MonoBehaviour {
 		} 
 		else 
 		{
-			ScreenShaker ();
-			hudManager.looseLife ();
+			if (cooldownFail <= 0) 
+			{
+				cooldownFail = 0.5f;
+				ScreenShaker ();
+				hudManager.looseLife ();
+			}
 		}
+
+		yield return true;
 	}
 
 	void ScreenShaker()
