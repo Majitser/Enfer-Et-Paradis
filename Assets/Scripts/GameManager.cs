@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		StatesManager.GameStates = StatesManager.states.GAME;
+		StatesManager.GameStates = StatesManager.states.MENU;
 	}
 	
 	// Update is called once per frame
