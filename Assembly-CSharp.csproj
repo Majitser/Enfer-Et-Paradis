@@ -52,9 +52,10 @@
      <Compile Include="Assets\Scripts\DestroyGo.cs" />
      <Compile Include="Assets\Scripts\DoorsScript.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\HudManager.cs" />
      <Compile Include="Assets\Scripts\MenuManager.cs" />
      <Compile Include="Assets\Scripts\MobProperty.cs" />
-     <Compile Include="Assets\Scripts\ScoreManager.cs" />
+     <Compile Include="Assets\Scripts\StatesManager.cs" />
      <None Include="Assets\FX Quest\!Readme.txt" />
      <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
  <Reference Include="UnityEngine.UI">

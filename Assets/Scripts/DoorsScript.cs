@@ -18,39 +18,47 @@ public class DoorsScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		openTime = Random.Range (minTimeOpen, maxTimeOpen);
-		startCooldownDoor = openTime;
-		cooldownBar.offsetMin = Vector2.zero;
-		this.transform.GetChild (0).gameObject.SetActive (false);
+		restartDoor ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (openTime > 0 && isOpen) 
+		if (StatesManager.GameStates == StatesManager.states.GAME) 
 		{
-			openTime -= Time.deltaTime;
-			cooldownBar.offsetMin += new Vector2 ((cooldownBarBg.rect.width / startCooldownDoor) * Time.deltaTime, 0);
-		}
+			if (openTime > 0 && isOpen) 
+			{
+				openTime -= Time.deltaTime;
+				cooldownBar.offsetMin += new Vector2 ((cooldownBarBg.rect.width / startCooldownDoor) * Time.deltaTime, 0);
+			}
 
-		if (closeTime > 0 && !isOpen)
-			closeTime -= Time.deltaTime;
+			if (closeTime > 0 && !isOpen)
+				closeTime -= Time.deltaTime;
 
-		if (openTime <= 0 && isOpen) 
-		{
-			this.transform.GetChild (0).gameObject.SetActive (true);
-			isOpen = false;
-			closeTime = Random.Range (minTimeClose, maxTimeClose);
-			cooldownBarBg.gameObject.SetActive (false);
-		}
+			if (openTime <= 0 && isOpen) 
+			{
+				this.transform.GetChild (0).gameObject.SetActive (true);
+				isOpen = false;
+				closeTime = Random.Range (minTimeClose, maxTimeClose);
+				cooldownBarBg.gameObject.SetActive (false);
+			}
 
-		if (closeTime <= 0 && !isOpen) 
-		{
-			this.transform.GetChild (0).gameObject.SetActive (false);
-			isOpen = true;
-			openTime = Random.Range (minTimeOpen, maxTimeOpen);
-			startCooldownDoor = openTime;
-			cooldownBarBg.gameObject.SetActive (true);
-			cooldownBar.offsetMin = Vector2.zero;
+			if (closeTime <= 0 && !isOpen) 
+			{
+				this.transform.GetChild (0).gameObject.SetActive (false);
+				isOpen = true;
+				openTime = Random.Range (minTimeOpen, maxTimeOpen);
+				startCooldownDoor = openTime;
+				cooldownBarBg.gameObject.SetActive (true);
+				cooldownBar.offsetMin = Vector2.zero;
+			}
 		}
+	}
+
+	public void restartDoor()
+	{
+		openTime = Random.Range (minTimeOpen, maxTimeOpen);
+		startCooldownDoor = openTime;
+		cooldownBar.offsetMin = Vector2.zero;
+		this.transform.GetChild (0).gameObject.SetActive (false);
 	}
 }

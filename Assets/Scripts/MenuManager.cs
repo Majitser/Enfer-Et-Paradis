@@ -33,6 +33,8 @@ public class MenuManager : MonoBehaviour {
 
 		if (isIn)
 			alpha = 1f;
+		else
+			go.SetActive (true);
 
 		while (t < 1.0f) 
 		{
@@ -47,6 +49,7 @@ public class MenuManager : MonoBehaviour {
 			yield return true;
 		}
 
-		go.SetActive (false);
+		if(isIn)
+			go.SetActive (false);
 	}
 }
