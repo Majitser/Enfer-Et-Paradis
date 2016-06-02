@@ -14,6 +14,7 @@ public class StatesManager : MonoBehaviour {
 
 	public GameObject gameHud;
 	public GameObject gameOverHud;
+	public GameObject menuHud;
 
 	// Use this for initialization
 	void Start () {
@@ -38,6 +39,15 @@ public class StatesManager : MonoBehaviour {
 		MenuManager.instance.FadeOut (gameHud);
 		if (gameOverHud.activeSelf)
 			MenuManager.instance.FadeIn (gameOverHud);
+		else if (menuHud.activeSelf)
+			MenuManager.instance.FadeIn (menuHud);
 		this.gameObject.GetComponent<GameManager> ().initGame ();
+	}
+
+	public void SetStateMenu()
+	{
+		GameStates = states.MENU;
+		MenuManager.instance.FadeOut (menuHud);
+		MenuManager.instance.FadeIn (gameOverHud);
 	}
 }
