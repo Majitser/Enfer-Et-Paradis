@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class DoorsScript : MonoBehaviour {
@@ -11,6 +12,7 @@ public class DoorsScript : MonoBehaviour {
 	public float maxTimeClose = 3;
 	public float minTimeClose = 2;
 	public bool isOpen = true;
+	public Sprite[] sprites;
 
 	private float openTime;
 	private float closeTime;
@@ -36,20 +38,20 @@ public class DoorsScript : MonoBehaviour {
 
 			if (openTime <= 0 && isOpen) 
 			{
-				this.transform.GetChild (0).gameObject.SetActive (true);
 				isOpen = false;
 				closeTime = Random.Range (minTimeClose, maxTimeClose);
 				cooldownBarBg.gameObject.SetActive (false);
+				this.gameObject.GetComponent<Image> ().sprite = sprites [0];
 			}
 
 			if (closeTime <= 0 && !isOpen) 
 			{
-				this.transform.GetChild (0).gameObject.SetActive (false);
 				isOpen = true;
 				openTime = Random.Range (minTimeOpen, maxTimeOpen);
 				startCooldownDoor = openTime;
 				cooldownBarBg.gameObject.SetActive (true);
 				cooldownBar.offsetMin = Vector2.zero;
+				this.gameObject.GetComponent<Image> ().sprite = sprites [1];
 			}
 		}
 	}
@@ -59,6 +61,6 @@ public class DoorsScript : MonoBehaviour {
 		openTime = Random.Range (minTimeOpen, maxTimeOpen);
 		startCooldownDoor = openTime;
 		cooldownBar.offsetMin = Vector2.zero;
-		this.transform.GetChild (0).gameObject.SetActive (false);
+		this.gameObject.GetComponent<Image> ().sprite = sprites [1];
 	}
 }
