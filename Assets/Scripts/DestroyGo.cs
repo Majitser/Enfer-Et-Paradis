@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DestroyGo : MonoBehaviour {
 
-	public float lifeTime = 2;
+	public float lifeTime = 3.5f;
 
 	// Use this for initialization
 	void Start () {

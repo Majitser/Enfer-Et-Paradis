@@ -20,7 +20,7 @@ public class DoorsScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		restartDoor ();
+		//restartDoor ();
 	}
 	
 	// Update is called once per frame
@@ -30,7 +30,7 @@ public class DoorsScript : MonoBehaviour {
 			if (openTime > 0 && isOpen) 
 			{
 				openTime -= Time.deltaTime;
-				cooldownBar.offsetMin += new Vector2 ((cooldownBarBg.rect.width / startCooldownDoor) * Time.deltaTime, 0);
+				//cooldownBar.offsetMin += new Vector2 ((cooldownBarBg.rect.width / startCooldownDoor) * Time.deltaTime, 0);
 			}
 
 			if (closeTime > 0 && !isOpen)
@@ -39,21 +39,29 @@ public class DoorsScript : MonoBehaviour {
 			if (openTime <= 0 && isOpen) 
 			{
 				isOpen = false;
-				closeTime = Random.Range (minTimeClose, maxTimeClose);
-				cooldownBarBg.gameObject.SetActive (false);
+				//closeTime = Random.Range (minTimeClose, maxTimeClose);
+				//cooldownBarBg.gameObject.SetActive (false);
 				this.gameObject.GetComponent<Image> ().sprite = sprites [0];
 			}
 
-			if (closeTime <= 0 && !isOpen) 
+			if (closeTime <= 0 && openTime > 0 && !isOpen) 
 			{
 				isOpen = true;
-				openTime = Random.Range (minTimeOpen, maxTimeOpen);
-				startCooldownDoor = openTime;
-				cooldownBarBg.gameObject.SetActive (true);
-				cooldownBar.offsetMin = Vector2.zero;
+				//openTime = Random.Range (minTimeOpen, maxTimeOpen);
+				//startCooldownDoor = openTime;
+				//cooldownBarBg.gameObject.SetActive (true);
+				//cooldownBar.offsetMin = Vector2.zero;
 				this.gameObject.GetComponent<Image> ().sprite = sprites [1];
 			}
 		}
+	}
+
+	public void OpenDoor(float timeBeforeOpen, float timeOpen)
+	{
+		isOpen = false;
+		this.gameObject.GetComponent<Image> ().sprite = sprites [0];
+		closeTime = timeBeforeOpen;
+		openTime = timeOpen;
 	}
 
 	public void restartDoor()

@@ -12,7 +12,7 @@ public class MobProperty : MonoBehaviour {
 	public Texture2D[] dragonImages;
 	public RuntimeAnimatorController[] dragonAnimators;
 	public Color[] colorsParticle;
-	public float timerDeath = 3;
+	public float timerDeath = 4;
 	[HideInInspector]
 	public bool isMoving = false;
 

@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject[] doors;
 	public RectTransform cooldownBarBg;
 	public RectTransform cooldownBar;
+	public float decalage = 0.6f;
 	[HideInInspector]
 	public float startCooldownDoor;
 
@@ -51,57 +52,17 @@ public class GameManager : MonoBehaviour {
 				cooldownSpawn -= Time.deltaTime;
 
 			if (cooldownSpawn <= 0)
-			{
-				nbSpawn = Mathf.Floor (1 + hudManager.score / (10 + hudManager.score / 20));
-				if (nbSpawn > 4)
-					nbSpawn = 4;
-				nbDragonNotSelected = (int)nbSpawn;
-				for (int i = 0; i < nbSpawn; i++)
-				{
-					int randType = Random.Range (0, doors.Length);
-					if (nbSpawn <= 3)
-						Spawn (randType, mobGrids [1]);
-					else if (nbSpawn == 4)
-						Spawn (randType, mobGrids [(int)Mathf.Floor (i / 2)]);
-					else if (nbSpawn == 5) 
-					{
-						if (i < 1)
-							Spawn (randType, mobGrids [0]);
-						else if (i >= 1 && i < 4)
-							Spawn (randType, mobGrids [1]);
-						else
-							Spawn (randType, mobGrids [2]);
-					}
-					else if (nbSpawn == 6 || nbSpawn == 9)
-						Spawn (randType, mobGrids [(int)Mathf.Floor (i / 3)]);
-					else if (nbSpawn == 7) 
-					{
-						if (i < 2)
-							Spawn (randType, mobGrids [0]);
-						else if (i >= 2 && i < 5)
-							Spawn (randType, mobGrids [1]);
-						else
-							Spawn (randType, mobGrids [2]);
-					} 
-					else if (nbSpawn == 8) 
-					{
-						if (i < 3)
-							Spawn (randType, mobGrids [0]);
-						else if (i >= 3 && i < 5)
-							Spawn (randType, mobGrids [1]);
-						else
-							Spawn (randType, mobGrids [2]);
-					}
-				}
-				for (int i = 0; i < mobGrids.Length; i++)
-				{
-					if (mobGrids [i].transform.childCount > 0)
-						mobGrids [i].gameObject.SetActive (true);
-					else
-						mobGrids [i].gameObject.SetActive (false);
-				}
-				cooldownSpawn = 2.7f;
-			}
+				levelDesign ();
+		}
+
+		if (Input.GetMouseButtonDown (0)) 
+		{
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast (ray.origin, -Vector3.forward, 0.1f))
+				Debug.Log (hit.transform.name);
+			GameObject click = Instantiate (clickParticle) as GameObject;
+			click.transform.position = ray.origin;
 		}
 	}
 
@@ -129,6 +90,59 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void levelDesign()
+	{
+		nbSpawn = Mathf.Floor (1 + hudManager.score / (10 + hudManager.score / 20));
+		if (nbSpawn > 4)
+			nbSpawn = 4;
+		nbDragonNotSelected = (int)nbSpawn;
+		for (int i = 0; i < nbSpawn; i++)
+		{
+			int randType = Random.Range (0, doors.Length);
+			if (nbSpawn <= 3)
+				Spawn (randType, mobGrids [1]);
+			else if (nbSpawn == 4)
+				Spawn (randType, mobGrids [(int)Mathf.Floor (i / 2)]);
+			else if (nbSpawn == 5) 
+			{
+				if (i < 1)
+					Spawn (randType, mobGrids [0]);
+				else if (i >= 1 && i < 4)
+					Spawn (randType, mobGrids [1]);
+				else
+					Spawn (randType, mobGrids [2]);
+			}
+			else if (nbSpawn == 6 || nbSpawn == 9)
+				Spawn (randType, mobGrids [(int)Mathf.Floor (i / 3)]);
+			else if (nbSpawn == 7) 
+			{
+				if (i < 2)
+					Spawn (randType, mobGrids [0]);
+				else if (i >= 2 && i < 5)
+					Spawn (randType, mobGrids [1]);
+				else
+					Spawn (randType, mobGrids [2]);
+			} 
+			else if (nbSpawn == 8) 
+			{
+				if (i < 3)
+					Spawn (randType, mobGrids [0]);
+				else if (i >= 3 && i < 5)
+					Spawn (randType, mobGrids [1]);
+				else
+					Spawn (randType, mobGrids [2]);
+			}
+		}
+		for (int i = 0; i < mobGrids.Length; i++)
+		{
+			if (mobGrids [i].transform.childCount > 0)
+				mobGrids [i].gameObject.SetActive (true);
+			else
+				mobGrids [i].gameObject.SetActive (false);
+		}
+		cooldownSpawn = 4f;
+	}
+
 	public void Spawn(int aleaType, Transform parent)
 	{
 		GameObject mob = Instantiate (mobPrefab) as GameObject;
@@ -142,6 +156,15 @@ public class GameManager : MonoBehaviour {
 		});
 
 		RectTransform mobRect = (RectTransform)mob.transform;
+		for (int i = 0; i < doors.Length; i++) 
+		{
+			float timeBeforeOpen = Random.Range (0f, 2f);
+			float timeOpen = Random.Range (0.8f, 2f);
+			/*if (timeBeforeOpen + timeOpen > 4)
+				timeOpen -=( timeBeforeOpen + timeOpen - 4 );*/
+			//Debug.Log (timeOpen);
+			doors [i].GetComponent<DoorsScript> ().OpenDoor (timeBeforeOpen, timeOpen);
+		}
 	}
 
 	IEnumerator TouchAction(int type, Transform mob)
@@ -166,10 +189,8 @@ public class GameManager : MonoBehaviour {
 				hudManager.addScore (5);
 			}
 			mob.parent.GetComponent<MobProperty> ().isMoving = true;
-			GameObject click = Instantiate (clickParticle) as GameObject;
-			click.transform.position = mob.parent.position;
 			mob.GetChild (0).GetComponent<ParticleSystem> ().Play ();
-			iTween.MoveTo (mob.gameObject, iTween.Hash ("x", doors [type].transform.position.x, "y", doors [type].transform.position.y, "time", 0.6, "easeType", iTween.EaseType.easeOutCubic));
+			iTween.MoveTo (mob.gameObject, iTween.Hash ("x", doors [type].transform.position.x, "y", doors [type].transform.position.y - decalage, "time", 0.6, "easeType", iTween.EaseType.easeOutCubic));
 
 			yield return new WaitForSeconds (0.6f);
 

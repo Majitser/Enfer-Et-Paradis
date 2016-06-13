@@ -7,6 +7,7 @@ public class HudManager : MonoBehaviour {
 	public int score = 0;
 	public Text scoreText;
 	public Text scoreTextGameOver;
+	public Text bestScoreText;
 
 	public GameObject[] lifeGo;
 	public int lifePoints = 3;
@@ -17,9 +18,12 @@ public class HudManager : MonoBehaviour {
 	public Color greatColor;
 	public bool scoreIsAnimating = false;
 
+	private int bestScore;
+
 	// Use this for initialization
 	void Start () {
-	
+		PlayerPrefs.GetInt ("Score");
+		bestScore = PlayerPrefs.GetInt ("Score");
 	}
 	
 	// Update is called once per frame
@@ -32,6 +36,16 @@ public class HudManager : MonoBehaviour {
 		score += points;
 		scoreText.text = score.ToString ();
 		scoreTextGameOver.text = "Score : " + score;
+		if (bestScore > score)
+			bestScoreText.text = "Meilleur score : " + bestScore;
+		else 
+		{
+			scoreTextGameOver.text = "Nouveau record";
+			bestScoreText.text = score.ToString();
+			bestScore = score;
+			PlayerPrefs.SetInt ("Score", bestScore);
+		}
+			
 
 		if (!scoreIsAnimating) 
 		{
